@@ -34,7 +34,7 @@ Pour lancer l'application complète, ouvrez un terminal et exécutez les command
 ### 2️⃣ Installer les dépendances :
 
 ```bash
-- npm intall
+- npm install
 ```
 
 ### 3️⃣ Configurer les variables d'environnement :
