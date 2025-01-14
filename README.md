@@ -2,7 +2,8 @@
 
 ## 📋 Description
 
-CaloryCount est une application web de suivi des calories et nutriments conçue dans le cadre du projet ESGI. Elle permet aux utilisateurs de suivre leur consommation alimentaire quotidienne.
+CaloryCount est une application web de suivi des calories et nutriments conçue dans le cadre d'un projet de groupe pour l'ESGI.
+Elle permet aux utilisateurs de suivre leur consommation alimentaire quotidienne.
 
 ### 🛠️ Technologies utilisées
 
@@ -20,11 +21,9 @@ Pour exécuter ce projet, assurez-vous d'avoir déjà installé les outils suiva
 
 ## 🚀 Guide d'installation
 
-Pour lancer l'application complète, ouvrez un terminal.
+Pour lancer l'application complète, ouvrez un terminal et exécutez les commandes suivantes :
 
 ### 1️⃣ Cloner le dépôt
-
-Ouvrez un terminal et exécutez les commandes suivantes :
 
 ```bash
 - git clone https://github.com/NicolasOsborne/CaloryCount.git
@@ -40,10 +39,10 @@ Ouvrez un terminal et exécutez les commandes suivantes :
 
 ### 3️⃣ Configurer les variables d'environnement :
 
-Créer un fichier .env.local à la racine du projet, et renseigner la clé API de l'USDA (pour créer une clé, suivre les instructions via ce lien : https://fdc.nal.usda.gov/api-guide) :
+Créer un fichier .env.local à la racine du projet, et renseigner la clé API de l'USDA (pour générer une clé, suivre les instructions via ce lien : https://fdc.nal.usda.gov/api-guide) :
 
 ```
-- VITE_USDA_API_KEY=votre_clé_api
+VITE_USDA_API_KEY=votre_clé_api
 ```
 
 ### 4️⃣ Lancer le projet :
