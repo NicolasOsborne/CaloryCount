@@ -54,3 +54,59 @@ VITE_USDA_API_KEY=votre_clé_api
 ## 🌐 Accéder à l'application
 
 L'application sera accessible à l'URL : http://localhost:5173
+
+---
+
+## 📋 Description
+
+CaloryCount is a web application for tracking your daily calory and nutrient inputs.
+
+### 🛠️ Technologies used
+
+- **Vue.js**
+- **Vuetify** : UI Framework.
+- **Axios** : HTTP client for API calls.
+- **Pinia** : General application's state store.
+- **Vue Router** : Application's routing system.
+
+## 📋 What you will need
+
+To run the project, make sure you already intalled the following:
+
+- Node.js
+
+## 🚀 Installation guide
+
+To run the application, open a terminal and run the following commands:
+
+### 1️⃣ Clone the repository
+
+```bash
+- git clone https://github.com/NicolasOsborne/CaloryCount.git
+- cd CaloryCount
+
+```
+
+### 2️⃣ Install dependencies:
+
+```bash
+- npm install
+```
+
+### 3️⃣ Configure the environment variables:
+
+Create a new .env.local file at the root of the project, and fill in your personal USDA API key (to generate a key, follow the instructions on the official website: https://fdc.nal.usda.gov/api-guide) :
+
+```
+VITE_USDA_API_KEY=your_api_key
+```
+
+### 4️⃣ Run the project:
+
+```bash
+- npm run dev
+```
+
+## 🌐 Accesss the application:
+
+The application will be available at the following URL: http://localhost:5173
