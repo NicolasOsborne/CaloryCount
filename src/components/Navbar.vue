@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand ms-3" href="#">Calori's Count</a>
+      <a class="navbar-brand ms-3" href="#">CaloryCount</a>
 
       <button
         class="navbar-toggler"
@@ -19,21 +19,21 @@
         <ul class="navbar-nav">
           <!-- Icône de recherche -->
           <li class="nav-item me-3">
-            <a class="nav-link" href="#">
-              <i class="bi bi-search" style="font-size: 1.2rem;"></i>
-            </a>
+            <router-link to="/food" class="nav-link">
+              <i class="bi bi-search" style="font-size: 1.2rem"></i>
+            </router-link>
           </li>
 
           <li class="nav-item me-3">
-            <a class="nav-link" href="#">
-              <i class="bi bi-bell" style="font-size: 1.2rem;"></i>
-            </a>
+            <router-link to="/recap" class="nav-link">
+              <i class="bi bi-bell" style="font-size: 1.2rem"></i>
+            </router-link>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="#">
-              <i class="bi bi-person-circle" style="font-size: 1.2rem;"></i>
-            </a>
+            <router-link to="/" class="nav-link">
+              <i class="bi bi-person-circle" style="font-size: 1.2rem"></i>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -42,9 +42,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'NavigationBar',
-});
+})
 </script>
