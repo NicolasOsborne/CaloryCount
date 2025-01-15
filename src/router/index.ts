@@ -12,12 +12,12 @@ const router = createRouter({
     {
       path: '/recap',
       name: 'recap',
-      component: () => import('../views/TestView.vue'),
+      component: () => import('../views/AddFoodView.vue'),
     },
     {
-      path: '/food',
-      name: 'food',
-      component: () => import('../views/TestView.vue'),
+      path: '/add-food',
+      name: 'add-food',
+      component: () => import('../views/AddFoodView.vue'),
     },
   ],
 })

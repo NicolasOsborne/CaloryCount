@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand ms-3" href="#">CaloryCount</a>
+      <router-link to="/" class="navbar-brand ms-3">CaloryCount</router-link>
 
       <button
         class="navbar-toggler"
@@ -19,7 +19,7 @@
         <ul class="navbar-nav">
           <!-- Icône de recherche -->
           <li class="nav-item me-3">
-            <router-link to="/food" class="nav-link">
+            <router-link to="/add-food" class="nav-link">
               <i class="bi bi-search" style="font-size: 1.2rem"></i>
             </router-link>
           </li>
