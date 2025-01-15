@@ -1,14 +1,22 @@
-import './assets/main.css'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import router from './router';
+import App from './App.vue';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap"
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import App from './App.vue'
-import router from './router'
+// Importer vos styles personnalisés
+import './assets/main.css';
 
-const app = createApp(App)
 
-app.use(createPinia())
-app.use(router)
+// Créer et configurer l'application Vue
+const app = createApp(App);
 
-app.mount('#app')
+app.use(createPinia());
+app.use(router);
+
+app.mount('#app');
+
+
