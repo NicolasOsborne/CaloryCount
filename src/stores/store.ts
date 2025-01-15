@@ -40,13 +40,12 @@ export const useFoodStore = defineStore('foodStore', {
         lunch: calculateTotals(state.meals.lunch),
         dinner: calculateTotals(state.meals.dinner),
         snacks: calculateTotals(state.meals.snacks),
-        all: calculateTotals(
-          state.meals.breakfast.concat(
-            state.meals.lunch,
-            state.meals.dinner,
-            state.meals.snacks
-          )
-        ),
+        all: calculateTotals([
+          ...state.meals.breakfast,
+          ...state.meals.lunch,
+          ...state.meals.dinner,
+          ...state.meals.snacks,
+        ]),
       }
     },
   },

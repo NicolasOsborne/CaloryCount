@@ -49,17 +49,17 @@
           v-if="modalFood"
           class="modal fade show"
           tabindex="-1"
-          role="dialog"
-          aria-hidden="true"
           style="display: block"
         >
-          <div class="modal-dialog" role="document">
+          <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title">{{ modalFood.name }}</h5>
-                <button type="button" class="close" @click="closeModal">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <button
+                  type="button"
+                  class="close"
+                  @click="closeModal"
+                ></button>
               </div>
               <div class="modal-body">
                 <ul>
@@ -117,6 +117,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'AddFoodView',
+
   data() {
     return {
       foodList: [] as Food[],
