@@ -3,9 +3,6 @@
     <NavigationBar />
     <router-view />
   </div>
-  <section class="container mt-4">
-    <DaylyCal />
-  </section>
 </template>
 
 <script lang="ts">
