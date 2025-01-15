@@ -33,14 +33,10 @@
         </div>
 
         <div class="row">
-          <div
-            class="col-4"
-            v-for="result in searchResults"
-            :key="result.fdcId"
-          >
+          <div class="col-4" v-for="result in searchResults" :key="result.id">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">{{ result.description }}</h5>
+                <h5 class="card-title">{{ result.name }}</h5>
                 <button class="btn btn-primary" @click="openModal(result)">
                   Voir détails
                 </button>
@@ -60,7 +56,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">{{ modalFood.description }}</h5>
+                <h5 class="modal-title">{{ modalFood.name }}</h5>
                 <button type="button" class="close" @click="closeModal">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -117,8 +113,10 @@
 import { getFoodDetails, getFoodList, searchFood } from '@/api/api'
 import { useFoodStore } from '@/stores/store'
 import type { Food } from '@/types/types'
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
+  name: 'AddFoodView',
   data() {
     return {
       foodList: [] as Food[],
@@ -126,7 +124,7 @@ export default {
       searchResults: [] as Food[],
       query: '',
       loading: true,
-      error: null,
+      error: null as string | null,
       modalFood: null as Food | null,
       selectedMealType: 'breakfast' as
         | 'breakfast'
@@ -155,7 +153,7 @@ export default {
       } catch (error) {
         this.error = 'Failed to fetch data'
       } finally {
-        this.loading(false)
+        this.loading = false
       }
     },
 
@@ -169,7 +167,50 @@ export default {
       this.error = null
       try {
         const data = await searchFood(this.query)
-        this.searchResults = data.foods
+        this.searchResults = data.foods.map((food: any) => {
+          const foodNutrients = food.foodNutrients || []
+
+          const getNutrientAmount = (nutrientId: number) => {
+            const nutrient = foodNutrients.find(
+              (n: any) => n.nutrientId === nutrientId
+            )
+            if (!nutrient) {
+              return 0
+            }
+            return nutrient.value
+          }
+
+          return {
+            id: food.fdcId,
+            name: food.description,
+            nutrients: {
+              calories: {
+                nutrientId: 1008,
+                nutrientName: 'Calories',
+                amount: getNutrientAmount(1008),
+                unit: 'kcal',
+              },
+              proteins: {
+                nutrientId: 1003,
+                nutrientName: 'Protéines',
+                amount: getNutrientAmount(1003),
+                unit: 'g',
+              },
+              lipids: {
+                nutrientId: 1004,
+                nutrientName: 'Lipides',
+                amount: getNutrientAmount(1004),
+                unit: 'g',
+              },
+              glucids: {
+                nutrientId: 1005,
+                nutrientName: 'Glucides',
+                amount: getNutrientAmount(1005),
+                unit: 'g',
+              },
+            },
+          }
+        })
         this.loading = false
       } catch (error) {
         this.error = 'Failed to fetch search results'
@@ -196,19 +237,27 @@ export default {
 
   computed: {
     filteredNutrients() {
-      const displayedNutrients = ['208', '203', '205', '204']
-      return (
-        this.foodDetails?.foodNutrients.filter((nutrient) =>
-          displayedNutrients.includes(nutrient.nutrient.number)
-        ) || []
-      )
+      if (!this.modalFood) return []
+
+      const displayedNutrients = ['calories', 'proteins', 'lipids', 'glucids']
+      const nutrientList = []
+
+      for (const nutrientKey of displayedNutrients) {
+        const nutrient =
+          this.modalFood.nutrients[
+            nutrientKey as keyof typeof this.modalFood.nutrients
+          ]
+        nutrientList.push(nutrient)
+      }
+
+      return nutrientList
     },
   },
 
   mounted() {
     this.loadFoodList()
   },
-}
+})
 </script>
 
 <style></style>

@@ -11,7 +11,7 @@ export const useFoodStore = defineStore('foodStore', {
     },
   }),
   getters: {
-    allMeals: (state) => {
+    allMeals(state) {
       return [
         ...state.meals.breakfast,
         ...state.meals.lunch,
@@ -19,29 +19,19 @@ export const useFoodStore = defineStore('foodStore', {
         ...state.meals.snacks,
       ]
     },
-    totals: (state) => {
+    totals(state) {
       const calculateTotals = (foods: Food[]) => {
         return foods.reduce(
           (totals, food) => {
-            if (!food.foodNutrients) return totals
-
-            food.foodNutrients.forEach((nutrient) => {
-              if (!nutrient.nutrientName || nutrient.amount === undefined)
-                return
-
-              if (nutrient.nutrientName === 'Energy')
-                totals.calories += nutrient.amount
-              if (nutrient.nutrientName === 'Protein')
-                totals.proteins += nutrient.amount
-              if (nutrient.nutrientName === 'Total lipid (fat)')
-                totals.lipids += nutrient.amount
-              if (nutrient.nutrientName === 'Sugars, total including NLEA')
-                totals.sugars += nutrient.amount
-            })
-
+            if (food.nutrients) {
+              totals.calories += food.nutrients.calories.amount || 0
+              totals.proteins += food.nutrients.proteins.amount || 0
+              totals.lipids += food.nutrients.lipids.amount || 0
+              totals.glucids += food.nutrients.glucids.amount || 0
+            }
             return totals
           },
-          { calories: 0, proteins: 0, lipids: 0, sugars: 0 }
+          { calories: 0, proteins: 0, lipids: 0, glucids: 0 }
         )
       }
 
@@ -50,7 +40,13 @@ export const useFoodStore = defineStore('foodStore', {
         lunch: calculateTotals(state.meals.lunch),
         dinner: calculateTotals(state.meals.dinner),
         snacks: calculateTotals(state.meals.snacks),
-        all: calculateTotals(this.allMeals),
+        all: calculateTotals(
+          state.meals.breakfast.concat(
+            state.meals.lunch,
+            state.meals.dinner,
+            state.meals.snacks
+          )
+        ),
       }
     },
   },
@@ -58,10 +54,8 @@ export const useFoodStore = defineStore('foodStore', {
     addFoodToMeal(mealType: keyof typeof this.meals, food: Food) {
       this.meals[mealType].push(food)
     },
-    removeFoodFromMeal(mealType: keyof typeof this.meals, foodId: number) {
-      this.meals[mealType] = this.meals[mealType].filter(
-        (f) => f.fdcId !== foodId
-      )
+    removeFoodFromMeal(mealType: keyof typeof this.meals, foodId: string) {
+      this.meals[mealType] = this.meals[mealType].filter((f) => f.id !== foodId)
     },
   },
 })
