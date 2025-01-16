@@ -1,31 +1,34 @@
 <template>
   <section class="container mt-4">
-    <!-- Petit Déjeuner -->
-    <div class="card mt-5 shadow-lg rounded" style="width: 100%; margin: 0 auto;">
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <h5 class="card-title font-weight-bold">Petit Déjeuner</h5>
-          <p class="card-text"><strong>Calories : </strong> 450 kcal</p>
-        </div>
-        <div class="mt-3">
-          <!-- Utilisation de d-flex pour aligner les colonnes et le bouton sur la même ligne -->
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="row w-100">
-              <div class="col text-center">
-                <h6 class="text-warning">Lipides</h6>
-                <p>15 g</p>
+    <!-- Itération sur chaque repas dans foodStore.totals sauf 'all' -->
+    <div v-for="(mealData, meal) in foodStore.totals" :key="meal">
+      <!-- Affichage conditionnel de la carte pour chaque repas, sauf 'all' -->
+      <div v-if="meal !== 'all' && isMealValid(mealData)" class="card mt-5 shadow-lg rounded" style="width: 100%; margin: 0 auto;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <h5 class="card-title font-weight-bold">{{ formatMealName(meal) }}</h5>
+            <p class="card-text"><strong>Calories : </strong> {{ mealData.calories }} kcal</p>
+          </div>
+          <div class="mt-3">
+            <!-- Utilisation de d-flex pour aligner les colonnes et le bouton sur la même ligne -->
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="row w-100">
+                <div class="col text-center">
+                  <h6 class="text-warning">Lipides</h6>
+                  <p>{{ mealData.lipids }} g</p>
+                </div>
+                <div class="col text-center">
+                  <h6 class="text-info">Glucides</h6>
+                  <p>{{ mealData.glucids }} g</p>
+                </div>
+                <div class="col text-center">
+                  <h6 class="text-success">Protéines</h6>
+                  <p>{{ mealData.proteins }} g</p>
+                </div>
               </div>
-              <div class="col text-center">
-                <h6 class="text-info">Glucides</h6>
-                <p>45 g</p>
-              </div>
-              <div class="col text-center">
-                <h6 class="text-success">Protéines</h6>
-                <p>20 g</p>
-              </div>
+              <!-- Bouton Voir Détails sur la même ligne -->
+              <router-link to="/recap" class="btn btn-light">Voir Détails</router-link>
             </div>
-            <!-- Bouton Voir Détails sur la même ligne -->
-            <router-link to="/ajout-aliment" class="btn btn-light">Voir Détails</router-link>
           </div>
         </div>
       </div>
@@ -34,16 +37,33 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      // Quantités fixes pour le petit déjeuner
-      lipidsBreakfast: 15, // Lipides pour le petit déjeuner
-      carbsBreakfast: 45, // Glucides pour le petit déjeuner
-      proteinsBreakfast: 20, // Protéines pour le petit déjeuner
-    };
+import { useFoodStore } from '@/stores/store'
+import { defineComponent, computed } from 'vue'
+
+export default defineComponent({
+  name: 'MealsCard',
+  setup() {
+    const foodStore = useFoodStore()
+
+    // Fonction pour vérifier si un repas est présent
+    const isMealValid = (mealData) => {
+      return mealData && mealData.calories && mealData.lipids && mealData.glucids && mealData.proteins
+    }
+
+    // Fonction pour formater le nom du repas (par exemple, "breakfast" devient "Petit Déjeuner")
+    const formatMealName = (meal) => {
+      const mealNames = {
+        breakfast: "Petit Déjeuner",
+        lunch: "Déjeuner",
+        dinner: "Dîner",
+        snack: "Snack",
+      }
+      return mealNames[meal] || meal // Si le nom du repas n'est pas trouvé, on utilise le nom brut
+    }
+
+    return { foodStore, isMealValid, formatMealName }
   },
-};
+})
 </script>
 
 <style scoped>
