@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-      <router-link to="/" class="navbar-brand ms-3">CaloryCount</router-link>
+      <router-link to="/" class="navbar-brand ms-3">Dashboard</router-link>
 
       <button
         class="navbar-toggler"
@@ -26,7 +26,7 @@
 
           <li class="nav-item me-3">
             <router-link to="/recap" class="nav-link">
-              <i class="bi bi-bell" style="font-size: 1.2rem"></i>
+              <i class="bi bi-clipboard-check" style="font-size: 1.2rem"></i>
             </router-link>
           </li>
 

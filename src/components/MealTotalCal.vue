@@ -1,5 +1,10 @@
 <template>
   <section class="container mt-4">
+    <!-- Vérifier s'il y a des repas valides dans foodStore.totals -->
+    <div v-if="!hasMeals" class="alert alert-info" role="alert">
+      Veuillez renseigner vos repas.
+    </div>
+
     <!-- Itération sur chaque repas dans foodStore.totals sauf 'all' -->
     <div v-for="(mealData, meal) in foodStore.totals" :key="meal">
       <!-- Affichage conditionnel de la carte pour chaque repas, sauf 'all' -->
@@ -45,7 +50,7 @@ export default defineComponent({
   setup() {
     const foodStore = useFoodStore()
 
-    // Fonction pour vérifier si un repas est présent
+    // Fonction pour vérifier si un repas est valide
     const isMealValid = (mealData) => {
       return mealData && mealData.calories && mealData.lipids && mealData.glucids && mealData.proteins
     }
@@ -61,7 +66,12 @@ export default defineComponent({
       return mealNames[meal] || meal // Si le nom du repas n'est pas trouvé, on utilise le nom brut
     }
 
-    return { foodStore, isMealValid, formatMealName }
+    // Vérifier si le store contient des repas valides
+    const hasMeals = computed(() => {
+      return Object.keys(foodStore.totals).some(meal => meal !== 'all' && isMealValid(foodStore.totals[meal]))
+    })
+
+    return { foodStore, isMealValid, formatMealName, hasMeals }
   },
 })
 </script>
@@ -140,5 +150,12 @@ hr.my-4 {
 
 .justify-content-between {
   justify-content: space-between;
+}
+
+.alert-info {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: bold;
 }
 </style>
