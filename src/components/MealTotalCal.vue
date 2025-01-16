@@ -1,8 +1,14 @@
 <template>
   <section class="container mt-4">
     <!-- Vérifier s'il y a des repas valides dans foodStore.totals -->
-    <div v-if="!hasMeals" class="alert alert-info" role="alert">
-      Veuillez renseigner vos repas.
+    <div v-if="!hasMeals" class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
+      <span>Veuillez renseigner vos repas.</span>
+      <!-- Bouton + avec lien vers la page de recherche -->
+      <router-link to="/add-food" class="ms-2">
+        <button class="btn btn-primary">
+          <i class="bi bi-plus"></i> Ajouter
+        </button>
+      </router-link>
     </div>
 
     <!-- Itération sur chaque repas dans foodStore.totals sauf 'all' -->
@@ -112,6 +118,12 @@ hr.my-4 {
   background-color: #e2e6ea; /* Changement de couleur au survol */
 }
 
+.btn-primary {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
 .card-title {
   font-size: 1.5rem; /* Agrandissement du titre */
   color: #333;
@@ -157,5 +169,13 @@ hr.my-4 {
   font-size: 1.2rem;
   text-align: center;
   font-weight: bold;
+}
+
+.ms-2 {
+  margin-left: 0.5rem; /* Espacement pour le bouton */
+}
+
+.bi-plus {
+  margin-right: 5px; /* Espacement entre le signe + et le texte */
 }
 </style>
