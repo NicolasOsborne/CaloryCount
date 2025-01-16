@@ -9,6 +9,7 @@
         </p>
         <form
           class="form-inline my-4 d-flex align-items-center justify-content-between"
+          @submit.prevent="searchFood"
         >
           <input
             class="form-control me-4"
@@ -19,104 +20,80 @@
             @input="searchFood"
           />
           <button
-            class="btn btn-outline-success"
+            class="btn btn-outline search-button"
             type="submit"
             @click="searchFood"
           >
             Rechercher
           </button>
         </form>
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-center">
+      <span
+        v-if="loading"
+        class="spinner-grow text-danger mt-4"
+        role="status"
+      ></span>
+      <span
+        v-if="loading"
+        class="spinner-grow text-warning mt-4"
+        role="status"
+      ></span>
+      <span
+        v-if="loading"
+        class="spinner-grow text-info mt-4"
+        role="status"
+      ></span>
+      <span
+        v-if="loading"
+        class="spinner-grow text-success mt-4"
+        role="status"
+      ></span>
+    </div>
 
-        <div>
-          <p v-if="loading">Searching...</p>
-          <p v-if="error">{{ error }}</p>
-        </div>
+    <p v-if="error">{{ error }}</p>
 
-        <div class="row">
-          <div class="col-4" v-for="result in searchResults" :key="result.id">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">{{ result.name }}</h5>
-                <button class="btn btn-primary" @click="openModal(result)">
-                  Voir détails
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          v-if="modalFood"
-          class="modal fade show"
-          tabindex="-1"
-          style="display: block"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">{{ modalFood.name }}</h5>
-                <button
-                  type="button"
-                  class="close"
-                  @click="closeModal"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <ul>
-                  <li
-                    v-for="nutrient in filteredNutrients"
-                    :key="nutrient.nutrientId"
-                  >
-                    {{ nutrient.nutrientName }}: {{ nutrient.amount }}
-                    {{ nutrient.unit }}
-                  </li>
-                </ul>
-                <div class="form-group">
-                  <label for="mealType">Ajouter à un repas :</label>
-                  <select
-                    class="form-control"
-                    id="mealType"
-                    v-model="selectedMealType"
-                  >
-                    <option value="breakfast">Petit déjeuner</option>
-                    <option value="lunch">Déjeuner</option>
-                    <option value="dinner">Dîner</option>
-                    <option value="snacks">Snack</option>
-                  </select>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  @click="closeModal"
-                >
-                  Fermer
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-success"
-                  @click="addFoodToMeal"
-                >
-                  Ajouter au repas
-                </button>
-              </div>
-            </div>
+    <div class="row mt-4">
+      <div class="col-4 g-4" v-for="result in searchResults" :key="result.id">
+        <div class="card food-card">
+          <div
+            class="card-body d-flex flex-row justify-content-between align-items-center shadow-md rounded"
+          >
+            <h5 class="card-title">{{ result.name }}</h5>
+            <button
+              class="btn btn-outline-success btn-sm rounded-circle d-flex align-items-center justify-content-center custom-hover"
+              title="Ajouter"
+              @click="openModal(result)"
+            >
+              <i class="bi bi-plus-lg"></i>
+            </button>
           </div>
         </div>
       </div>
     </div>
+    <FoodModal
+      v-if="modalFood"
+      :food="modalFood"
+      @close="closeModal"
+      @add-food="handleAddFood"
+    />
   </section>
 </template>
 
 <script lang="ts">
-import { getFoodDetails, getFoodList, searchFood } from '@/api/api'
+import { getFoodDetails, searchFood } from '@/api/api'
 import { useFoodStore } from '@/stores/store'
 import type { Food } from '@/types/types'
 import { defineComponent } from 'vue'
+import FoodModal from '@/components/FoodModal.vue'
 
 export default defineComponent({
   name: 'AddFoodView',
+
+  components: {
+    FoodModal,
+  },
 
   data() {
     return {
@@ -124,7 +101,7 @@ export default defineComponent({
       foodDetails: null as Food | null,
       searchResults: [] as Food[],
       query: '',
-      loading: true,
+      loading: false,
       error: null as string | null,
       modalFood: null as Food | null,
       selectedMealType: 'breakfast' as
@@ -135,17 +112,6 @@ export default defineComponent({
     }
   },
   methods: {
-    async loadFoodList() {
-      this.loading = true
-      this.error = null
-      try {
-        this.foodList = await getFoodList()
-      } catch (error) {
-        this.error = 'Failed to fetch data'
-        this.loading = false
-      }
-    },
-
     async loadFoodDetails(fdcId: string) {
       this.loading = true
       this.error = null
@@ -160,6 +126,7 @@ export default defineComponent({
 
     async searchFood() {
       if (!this.query) {
+        this.loading = false
         this.searchResults = []
         return
       }
@@ -216,6 +183,8 @@ export default defineComponent({
       } catch (error) {
         this.error = 'Failed to fetch search results'
         this.loading = false
+      } finally {
+        this.loading = false
       }
     },
 
@@ -232,6 +201,12 @@ export default defineComponent({
       if (this.modalFood) {
         foodStore.addFoodToMeal(this.selectedMealType, this.modalFood)
       }
+      this.closeModal()
+    },
+
+    handleAddFood({ food, mealType }: { food: Food; mealType: string }) {
+      const foodStore = useFoodStore()
+      foodStore.addFoodToMeal(mealType as keyof typeof foodStore.meals, food)
       this.closeModal()
     },
   },
@@ -254,11 +229,47 @@ export default defineComponent({
       return nutrientList
     },
   },
-
-  mounted() {
-    this.loadFoodList()
-  },
 })
 </script>
 
-<style></style>
+<style scoped>
+.search-button {
+  border-color: #28a745;
+  background-color: #28a745;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: white;
+  color: #28a745;
+}
+
+.food-card {
+  margin: 0 auto;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.food-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.custom-hover {
+  width: 40px;
+  height: 40px;
+  border-radius: 999;
+  font-size: 1.5rem;
+  cursor: pointer;
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+  transition: all 0.3s ease;
+}
+
+.custom-hover:hover {
+  background-color: white;
+  color: #28a745;
+  border-color: #28a745;
+}
+</style>

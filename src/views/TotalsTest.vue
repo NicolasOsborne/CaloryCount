@@ -15,6 +15,7 @@
     <p>Glucids: {{ mealTotal.glucids }} g</p>
   </div>
 </template>
+
 <script lang="ts">
 import { useFoodStore } from '@/stores/store'
 import { defineComponent } from 'vue'
