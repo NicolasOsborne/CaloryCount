@@ -203,7 +203,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent } from 'vue'
 import { useFoodStore } from '@/stores/store'
 import Chart from 'chart.js/auto'
 
