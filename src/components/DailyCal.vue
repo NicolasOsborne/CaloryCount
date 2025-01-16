@@ -10,50 +10,68 @@
         <div class="mt-3">
           <div class="d-flex">
             <div class="p-2 border-end" style="flex: 1;">
-              <h4> TO DO : (344)</h4>
-              <p> Calorie consommée </p>
-              <!-- Pas de barre de progression ni couleur pour les calories -->
+              <h4>{{ foodStore.totals.all.calories }} kcal</h4>
+              <p>Calories consommées</p>
             </div>
             <div class="p-2 border-end" style="flex: 1;">
-              <h4> TO DO : (1720)</h4>
-              <p> Calorie restante </p>
-              <!-- Pas de barre de progression ni couleur pour les calories restantes -->
+              <h4>{{ remainingCalories }} kcal</h4>
+              <p>Calories restantes</p>
             </div>
             <div class="p-2 border-end" style="flex: 1;">
-              <h4> TO DO : (2200)</h4>
-              <p> Objectif de calories </p>
-              <!-- Pas de barre de progression ni couleur pour l'objectif -->
+              <h4>{{ calorieGoal }} kcal</h4>
+              <p>Objectif de calories</p>
             </div>
           </div>
         </div>
 
-        <!-- Ligne de séparation -->
         <hr class="my-4">
 
-        <!-- 3 Colonnes : Lipides, Glucides, Protéines -->
         <div class="row">
+          <!-- Lipides -->
           <div class="col text-center">
             <h5 class="text-warning">Lipides</h5>
-            <p>20 g</p>
-            <!-- Barre de progression pour les lipides -->
+            <p>{{ foodStore.totals.all.lipids }} g / {{ nutrientGoals.lipids }} g</p> <!-- Objectif Lipides dynamique -->
             <div class="progress">
-              <div class="progress-bar bg-warning" role="progressbar" :style="{ width: lipidsProgress + '%' }" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+              <div
+                  class="progress-bar bg-warning"
+                  role="progressbar"
+                  :style="{ width: lipidsProgress + '%' }"
+                  :aria-valuenow="foodStore.totals.all.lipids"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+              ></div>
             </div>
           </div>
+
+          <!-- Glucides -->
           <div class="col text-center">
             <h5 class="text-info">Glucides</h5>
-            <p>75 g</p>
-            <!-- Barre de progression pour les glucides -->
+            <p>{{ foodStore.totals.all.glucids }} g / {{ nutrientGoals.carbs }} g</p> <!-- Objectif Glucides dynamique -->
             <div class="progress">
-              <div class="progress-bar bg-info" role="progressbar" :style="{ width: carbsProgress + '%' }" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              <div
+                  class="progress-bar bg-info"
+                  role="progressbar"
+                  :style="{ width: carbsProgress + '%' }"
+                  :aria-valuenow="foodStore.totals.all.glucids"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+              ></div>
             </div>
           </div>
+
+          <!-- Protéines -->
           <div class="col text-center">
             <h5 class="text-success">Protéines</h5>
-            <p>30 g</p>
-            <!-- Barre de progression pour les protéines -->
+            <p>{{ foodStore.totals.all.proteins }} g / {{ nutrientGoals.proteins }} g</p> <!-- Objectif Protéines dynamique -->
             <div class="progress">
-              <div class="progress-bar bg-success" role="progressbar" :style="{ width: proteinsProgress + '%' }" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+              <div
+                  class="progress-bar bg-success"
+                  role="progressbar"
+                  :style="{ width: proteinsProgress + '%' }"
+                  :aria-valuenow="foodStore.totals.all.proteins"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+              ></div>
             </div>
           </div>
         </div>
@@ -62,97 +80,51 @@
   </section>
 </template>
 
-<script>
-export default {
-  data() {
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useFoodStore } from '@/stores/store';
+
+export default defineComponent({
+  name: 'DynamicTotalsCard',
+  setup() {
+    const foodStore = useFoodStore();
+
+    // Définir les objectifs pour chaque nutriment
+    const nutrientGoals = {
+      lipids: 85,  // Objectif Lipides
+      carbs: 310,   // Objectif Glucides
+      proteins: 125, // Objectif Protéines
+    };
+
+    const calorieGoal = 2400; // Objectif de calories
+
     return {
-      name: "John", // Remplace avec ton nom dynamique
-      currentDate: new Date(), // Date actuelle
-      lipidsAmount: 20, // Exemple de lipides
-      carbsAmount: 75, // Exemple de glucides
-      proteinsAmount: 30, // Exemple de protéines
+      foodStore,
+      calorieGoal,
+      nutrientGoals,
     };
   },
   computed: {
+    name() {
+      return "John"; // Remplacez par un nom dynamique
+    },
     formattedDate() {
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
-      return new Intl.DateTimeFormat('fr-FR', options).format(this.currentDate);
+      return new Intl.DateTimeFormat('fr-FR', options).format(new Date());
+    },
+    remainingCalories() {
+      return this.calorieGoal - this.foodStore.totals.all.calories;
     },
     lipidsProgress() {
-      return (this.lipidsAmount / 100) * 100;
+      return (this.foodStore.totals.all.lipids / this.nutrientGoals.lipids) * 100;
     },
     carbsProgress() {
-      return (this.carbsAmount / 100) * 100;
+      return (this.foodStore.totals.all.glucids / this.nutrientGoals.carbs) * 100;
     },
     proteinsProgress() {
-      return (this.proteinsAmount / 100) * 100;
+      return (this.foodStore.totals.all.proteins / this.nutrientGoals.proteins) * 100;
     },
   },
-};
+});
 </script>
 
-<style scoped>
-.card {
-  margin: 0 auto;
-  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Animation lors du hover */
-}
-
-.card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.1); /* Ombre au survol */
-  transform: translateY(-5px); /* Effet de légère élévation */
-}
-
-.card-body {
-  padding: 20px;
-}
-
-hr.my-4 {
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: 20px 0;
-}
-
-.card-title {
-  font-size: 1.5rem; /* Agrandissement du titre */
-  color: #333;
-}
-
-.card-text {
-  font-size: 1.2rem; /* Agrandissement du texte des calories */
-}
-
-.row {
-  margin-top: 20px;
-}
-
-.col h5 {
-  font-weight: bold; /* Gras pour les titres des macronutriments */
-  font-size: 1.2rem;
-}
-
-.col p {
-  font-size: 1.1rem; /* Taille agréable pour les quantités */
-  color: #555;
-}
-
-.progress {
-  height: 12px;
-  border-radius: 10px;
-}
-
-.progress-bar {
-  border-radius: 10px;
-}
-
-.text-warning {
-  color: #ffc107;
-}
-
-.text-info {
-  color: #17a2b8;
-}
-
-.text-success {
-  color: #28a745;
-}
-</style>

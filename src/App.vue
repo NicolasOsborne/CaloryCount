@@ -10,7 +10,7 @@ import { defineComponent } from 'vue'
 import NavigationBar from './components/Navbar.vue'
 
 export default defineComponent({
-  name: 'App',
+
   components: {
     NavigationBar,
   },
