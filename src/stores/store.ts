@@ -51,6 +51,7 @@ export const useFoodStore = defineStore('foodStore', {
   },
   actions: {
     addFoodToMeal(mealType: keyof typeof this.meals, food: Food) {
+      console.log('Adding food to:', mealType, food); 
       this.meals[mealType].push(food)
     },
     removeFoodFromMeal(mealType: keyof typeof this.meals, foodId: string) {
