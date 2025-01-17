@@ -5,6 +5,8 @@
 CaloryCount est une application web de suivi des calories et nutriments conçue dans le cadre d'un projet de groupe pour l'ESGI.
 Elle permet aux utilisateurs de suivre leur consommation alimentaire quotidienne.
 
+Ce projet a été réalisé par le groupe composé de : Justyna WARZECHA, Anita CHAUDHARY, Baptiste SAUVAGE, Nicolas OSBORNE
+
 ### 🛠️ Technologies utilisées
 
 - **Vue.js**
